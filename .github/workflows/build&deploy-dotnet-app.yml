@@ -1,9 +1,7 @@
-name: dotnet
+name: build&deploy .net app
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
     branches: [ "master" ]
 
 jobs:
@@ -39,7 +37,5 @@ jobs:
         port: ${{ secrets.VPS_PORT }}
         key: ${{ secrets.VPS_KEY }}
         script: |
-          cat /etc/os-release
-          df -h
           cd /home/github-actions/
           ls -lah
