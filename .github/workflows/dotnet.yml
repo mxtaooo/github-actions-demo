@@ -7,11 +7,11 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-20.04
     steps:
     - name: Clone the repo
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
