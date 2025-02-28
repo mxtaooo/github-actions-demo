@@ -7,20 +7,24 @@ on:
     branches: [ "master" ]
 
 jobs:
-  release:
+  release-app:
     runs-on: ubuntu-20.04
     steps:
-    - name: Clone the repo
+    - name: clone source code
       uses: actions/checkout@v4
-    - name: Setup .NET
+    - name: setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-    - name: Publish app
-      run: dotnet publish --configuration Release --runtime linux-x64 --self-contained true --output ./release
-    - name: List current dir
-      run: ls -lah
-    - name: Package dist
-      run: zip -r release.zip ./release
-    - name: List current dir
-      run: ls -lah
+    - name: build&package application
+      run: |
+        echo "build dotnet app now..."
+        dotnet publish --configuration Release --runtime linux-x64 --self-contained true --output ./release
+        echo "package dotnet app now..."
+        zip -q -r release.zip ./release
+    - name: upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-app-release
+        path: ./release.zip
+        overwrite: true
