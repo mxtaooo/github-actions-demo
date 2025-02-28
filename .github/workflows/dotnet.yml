@@ -22,9 +22,24 @@ jobs:
         dotnet publish --configuration Release --runtime linux-x64 --self-contained true --output ./release
         echo "package dotnet app now..."
         zip -q -r release.zip ./release
-    - name: upload artifact
-      uses: actions/upload-artifact@v4
+    - name: transfer file via scp...
+      uses: appleboy/scp-action@v0.1.7
       with:
-        name: dotnet-app-release
-        path: ./release.zip
-        overwrite: true
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        port: ${{ secrets.VPS_PORT }}
+        key: ${{ secrets.VPS_KEY }}
+        source: ./release.zip
+        target: /home/github-actions/
+    - name: execute commands via ssh...
+      uses: appleboy/ssh-action@v1.2.1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        port: ${{ secrets.VPS_PORT }}
+        key: ${{ secrets.VPS_KEY }}
+        script: |
+          cat /etc/os-release
+          df -h
+          cd /home/github-actions/
+          ls -lah
